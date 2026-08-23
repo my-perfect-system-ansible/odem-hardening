@@ -10,10 +10,9 @@
     path: "{{ lockdown_repos_dir }}"
     state: directory
     owner: "{{ lockdown_user }}"
-    group: "{{ lockdown_user }}"
-    mode: "0755"
+    group: "{{ lockdown_group }}"
+    mode: "2755"
   become: true
-  become_user: "{{ lockdown_user }}"
 
 - name: Clone DEBIAN13-CIS repository
   ansible.builtin.git:
@@ -22,27 +21,24 @@
     version: "{{ lockdown_cis_version }}"
     force: true
   become: true
-  become_user: "{{ lockdown_user }}"
 
 - name: Ensure CIS inventory directory exists
   ansible.builtin.file:
     path: "{{ lockdown_repos_dir }}/DEBIAN13-CIS/inventory"
     state: directory
     owner: "{{ lockdown_user }}"
-    group: "{{ lockdown_user }}"
-    mode: "0755"
+    group: "{{ lockdown_group }}"
+    mode: "2755"
   become: true
-  become_user: "{{ lockdown_user }}"
 
 - name: Render CIS inventory hosts file
   ansible.builtin.template:
     src: hosts.j2
     dest: "{{ lockdown_repos_dir }}/DEBIAN13-CIS/inventory/hosts"
     owner: "{{ lockdown_user }}"
-    group: "{{ lockdown_user }}"
-    mode: "0644"
+    group: "{{ lockdown_group }}"
+    mode: "2644"
   become: true
-  become_user: "{{ lockdown_user }}"
 
 - name: Install ansible package
   ansible.builtin.package:
@@ -55,8 +51,8 @@
     path: "{{ lockdown_user_home }}/.ssh"
     state: directory
     owner: "{{ lockdown_user }}"
-    group: "{{ lockdown_user }}"
-    mode: "0700"
+    group: "{{ lockdown_group }}"
+    mode: "2700"
   become: true
 
 - name: Generate lockdown user SSH keypair
@@ -65,7 +61,7 @@
     type: rsa
     size: 4096
     owner: "{{ lockdown_user }}"
-    group: "{{ lockdown_user }}"
+    group: "{{ lockdown_group }}"
     mode: "0600"
     force: true
   become: true
@@ -85,9 +81,9 @@
   ansible.builtin.lineinfile:
     path: "{{ lockdown_repos_dir }}/DEBIAN13-CIS/defaults/main.yml"
     insertafter: '^deb13cis_sudoers_exclude_nopasswd_list:'
-    line: '  - {{ lockdown_user }}'
+    line: '  - deploy'
   become: true
-  become_user: "{{ lockdown_user }}"
+  when: lockdown_enable_sudoers_user | bool
 
 - name: Add admin group to CIS sudoers nopasswd list
   ansible.builtin.lineinfile:
@@ -95,7 +91,7 @@
     insertafter: '^deb13cis_sudoers_exclude_nopasswd_list:'
     line: '  - "%admin"'
   become: true
-  become_user: "{{ lockdown_user }}"
+  when: lockdown_enable_sudoers_admin_group | bool
 
 - name: Override CIS AIDE init async threshold
   ansible.builtin.lineinfile:
@@ -103,7 +99,7 @@
     regexp: '^deb13cis_aide_init_async:'
     line: 'deb13cis_aide_init_async: 3600'
   become: true
-  become_user: "{{ lockdown_user }}"
+  when: lockdown_enable_aide_async | bool
 
 - name: Enable X window server in CIS defaults
   ansible.builtin.lineinfile:
@@ -111,7 +107,7 @@
     regexp: '^deb13cis_xwindow_server:'
     line: 'deb13cis_xwindow_server: true'
   become: true
-  become_user: "{{ lockdown_user }}"
+  when: lockdown_enable_xwindow_server | bool
 
 - name: Override CIS firewall package
   ansible.builtin.lineinfile:
@@ -119,7 +115,7 @@
     regexp: '^deb13cis_firewall_package:'
     line: 'deb13cis_firewall_package: {{ lockdown_firewall_package }}'
   become: true
-  become_user: "{{ lockdown_user }}"
+  when: lockdown_enable_firewall_package | bool
 
 - name: Override CIS sugroup to sudo
   ansible.builtin.lineinfile:
@@ -127,7 +123,7 @@
     regexp: '^deb13cis_sugroup:'
     line: 'deb13cis_sugroup: sudo'
   become: true
-  become_user: "{{ lockdown_user }}"
+  when: lockdown_enable_sugroup | bool
 
 - name: Execute CIS lockdown playbook when enabled
   ansible.builtin.shell: |
@@ -143,5 +139,4 @@
       -o StrictHostKeyChecking=no
       -o UserKnownHostsFile=/dev/null
   become: true
-  become_user: "{{ lockdown_user }}"
   when: lockdown_enable_execute | bool

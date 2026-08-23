@@ -17,4 +17,5 @@ galaxy_info:
     - cis
     - lockdown
     - odem-hardening
-dependencies: []
+dependencies: 
+  - odem.base.common

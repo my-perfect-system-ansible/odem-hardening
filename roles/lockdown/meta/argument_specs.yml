@@ -44,3 +44,33 @@ argument_specs:
         required: false
         default: false
         description: "Actually execute the CIS site.yml playbook"
+      lockdown_enable_sudoers_user:
+        type: bool
+        required: false
+        default: true
+        description: "Add the lockdown user to the CIS sudoers nopasswd list"
+      lockdown_enable_sudoers_admin_group:
+        type: bool
+        required: false
+        default: true
+        description: "Add the admin group to the CIS sudoers nopasswd list"
+      lockdown_enable_aide_async:
+        type: bool
+        required: false
+        default: true
+        description: "Override the CIS AIDE init async threshold to 3600"
+      lockdown_enable_xwindow_server:
+        type: bool
+        required: false
+        default: true
+        description: "Enable the X window server in CIS defaults"
+      lockdown_enable_firewall_package:
+        type: bool
+        required: false
+        default: true
+        description: "Override the CIS firewall package"
+      lockdown_enable_sugroup:
+        type: bool
+        required: false
+        default: true
+        description: "Override the CIS sugroup to sudo"
