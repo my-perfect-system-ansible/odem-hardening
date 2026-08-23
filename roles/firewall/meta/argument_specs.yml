@@ -37,6 +37,11 @@ argument_specs:
         required: false
         default: true
         description: "ACCEPT ICMP on INPUT and OUTPUT"
+      firewall_enable_docker_compat:
+        type: bool
+        required: false
+        default: true
+        description: "Restart the docker service after applying rules so Docker rebuilds its iptables chains"
       firewall_rules_dir:
         type: str
         required: false

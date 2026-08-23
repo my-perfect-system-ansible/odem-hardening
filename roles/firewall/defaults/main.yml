@@ -6,6 +6,8 @@ firewall_enable_icmp: true
 
 firewall_enable_nat_ip_forwarding: false
 
+firewall_enable_docker_compat: true
+
 # Regular configuration
 
 firewall_packages:

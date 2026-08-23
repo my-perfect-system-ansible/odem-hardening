@@ -13,6 +13,7 @@ Render iptables rules.v4 and install systemd restore service
 | Variable | Default | Description |
 |---|---|---|
 | `firewall_enable_icmp` | `true` | ACCEPT ICMP on INPUT and OUTPUT |
+| `firewall_enable_docker_compat` | `true` | Restart docker after applying rules so Docker rebuilds its iptables chains |
 | `firewall_enable_nat_ip_forwarding` | `false` | Enable IPv4 forwarding + NAT masquerade (off by default) |
 | `firewall_nat_out_interface` | `` | WAN interface for NAT masquerade (required when firewall_enable_nat_ip_forwarding is true) |
 | `firewall_nat_source_network` | `` | Source network CIDR for NAT masquerade (required when firewall_enable_nat_ip_forwarding is true) |

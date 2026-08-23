@@ -16,7 +16,7 @@ runs it locally).
 
 | Role | Description | Complexity |
 |---|---|---|
-| `odem.hardening.firewall` | iptables rules.v4.j2 with 2 for-loops + 2 if-blocks (port ranges, ICMP, NAT). sysctl reload gated by `firewall_enable_nat_ip_forwarding`. Systemd unit template for the iptables-restore service. | 3 (accepted) |
+| `odem.hardening.firewall` | iptables rules.v4.j2 with 2 for-loops + 2 if-blocks (port ranges, ICMP, NAT). sysctl reload gated by `firewall_enable_nat_ip_forwarding`. Systemd unit template for the iptables-restore service. `iptables-restore` flushes Docker's `DOCKER-*` chains, so the role restarts docker afterwards (gated by `firewall_enable_docker_compat`, default true) and orders `iptables.service` before `docker.service`. | 3 (accepted) |
 | `odem.hardening.apparmor` | Install apparmor-utils, `synchronize` profiles from role `files/`, enforce + restart. | 1 |
 | `odem.hardening.auditd` | apt install, 2 dir ensures (rules.d + run), 2 templates (`/etc/audit/auditd.conf` with ~13 vars, systemd override from `files/`). | 2 |
 | `odem.hardening.aide` | apt install, `/var/lib/aide` directory, render one small static template. | 1 |

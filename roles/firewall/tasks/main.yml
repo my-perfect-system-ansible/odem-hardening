@@ -23,6 +23,9 @@
     group: root
     mode: "0644"
   become: true
+  notify:
+    - Restart iptables service
+    - Restart docker service
 
 - name: Configure net.ipv4.ip_forward for NAT
   ansible.posix.sysctl:
@@ -41,6 +44,7 @@
     group: root
     mode: "0644"
   become: true
+  notify: Restart iptables service
 
 - name: Enable and start iptables service
   ansible.builtin.systemd:
