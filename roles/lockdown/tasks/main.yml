@@ -79,7 +79,7 @@
 
 - name: Add lockdown user to CIS sudoers nopasswd list
   ansible.builtin.lineinfile:
-    path: "{{ lockdown_repos_dir }}/DEBIAN13-CIS/defaults/main.yml"
+    path: "{{ lockdown_repos_dir }}/DEBIAN13-CIS/defaults/main/main.yml"
     insertafter: '^deb13cis_sudoers_exclude_nopasswd_list:'
     line: '  - deploy'
   become: true
@@ -87,7 +87,7 @@
 
 - name: Add admin group to CIS sudoers nopasswd list
   ansible.builtin.lineinfile:
-    path: "{{ lockdown_repos_dir }}/DEBIAN13-CIS/defaults/main.yml"
+    path: "{{ lockdown_repos_dir }}/DEBIAN13-CIS/defaults/main/main.yml"
     insertafter: '^deb13cis_sudoers_exclude_nopasswd_list:'
     line: '  - "%admin"'
   become: true
@@ -95,7 +95,7 @@
 
 - name: Override CIS AIDE init async threshold
   ansible.builtin.lineinfile:
-    path: "{{ lockdown_repos_dir }}/DEBIAN13-CIS/defaults/main.yml"
+    path: "{{ lockdown_repos_dir }}/DEBIAN13-CIS/defaults/main/main.yml"
     regexp: '^deb13cis_aide_init_async:'
     line: 'deb13cis_aide_init_async: 3600'
   become: true
@@ -103,7 +103,7 @@
 
 - name: Enable X window server in CIS defaults
   ansible.builtin.lineinfile:
-    path: "{{ lockdown_repos_dir }}/DEBIAN13-CIS/defaults/main.yml"
+    path: "{{ lockdown_repos_dir }}/DEBIAN13-CIS/defaults/main/main.yml"
     regexp: '^deb13cis_xwindow_server:'
     line: 'deb13cis_xwindow_server: true'
   become: true
@@ -111,7 +111,7 @@
 
 - name: Override CIS firewall package
   ansible.builtin.lineinfile:
-    path: "{{ lockdown_repos_dir }}/DEBIAN13-CIS/defaults/main.yml"
+    path: "{{ lockdown_repos_dir }}/DEBIAN13-CIS/defaults/main/main.yml"
     regexp: '^deb13cis_firewall_package:'
     line: 'deb13cis_firewall_package: {{ lockdown_firewall_package }}'
   become: true
@@ -119,7 +119,7 @@
 
 - name: Override CIS sugroup to sudo
   ansible.builtin.lineinfile:
-    path: "{{ lockdown_repos_dir }}/DEBIAN13-CIS/defaults/main.yml"
+    path: "{{ lockdown_repos_dir }}/DEBIAN13-CIS/defaults/main/main.yml"
     regexp: '^deb13cis_sugroup:'
     line: 'deb13cis_sugroup: sudo'
   become: true
