@@ -1,0 +1,9 @@
+---
+# Fragment for the common → identity merge.
+# Compiles into changelogs/changelog.yaml at release time.
+minor_changes:
+  - |
+    Switched the `lockdown` role's meta dependency from the removed
+    `odem.base.common` to `odem.base.identity`, and renamed the
+    `common_default_repo_dir` reference to `identity_default_repo_dir` in
+    `lockdown_repos_dir`.

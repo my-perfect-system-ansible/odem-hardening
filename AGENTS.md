@@ -20,7 +20,7 @@ runs it locally).
 | `odem.hardening.apparmor` | Install apparmor-utils, `synchronize` profiles from role `files/`, enforce + restart. | 1 |
 | `odem.hardening.auditd` | apt install, 2 dir ensures (rules.d + run), 2 templates (`/etc/audit/auditd.conf` with ~13 vars, systemd override from `files/`). | 2 |
 | `odem.hardening.aide` | apt install, `/var/lib/aide` directory, render one small static template. | 1 |
-| `odem.hardening.lockdown` | Install `cracklib-runtime` + `ansible`, clone `DEBIAN13-CIS` under `{{ common_default_repo_dir }}`, generate SSH keypair + authorized_key, 6 `lineinfile` overrides into the CIS defaults — each gated by its own `lockdown_enable_*` toggle (sudoers user, sudoers admin group, AIDE async, X window, firewall package, sugroup) — plus a sub-playbook invocation gated by `lockdown_enable_execute`. | 3 (accepted) |
+| `odem.hardening.lockdown` | Install `cracklib-runtime` + `ansible`, clone `DEBIAN13-CIS` under `{{ identity_default_repo_dir }}`, generate SSH keypair + authorized_key, 6 `lineinfile` overrides into the CIS defaults — each gated by its own `lockdown_enable_*` toggle (sudoers user, sudoers admin group, AIDE async, X window, firewall package, sugroup) — plus a sub-playbook invocation gated by `lockdown_enable_execute`. | 3 (accepted) |
 | `odem.hardening.fail2ban` | Install fail2ban with the default sshd jail (systemd backend, iptables-multiport banaction) to prevent SSH brute-force attacks. Gated by `fail2ban_enable_service`. | 1 |
 
 ## Conventions

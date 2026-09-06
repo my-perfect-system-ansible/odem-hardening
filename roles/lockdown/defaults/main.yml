@@ -13,7 +13,7 @@ lockdown_enable_sugroup: true
 lockdown_user: "root"
 lockdown_group: "admin"
 lockdown_user_home: "/root"
-lockdown_repos_dir: "{{ common_default_repo_dir }}/github/ansible-lockdown"
+lockdown_repos_dir: "{{ identity_default_repo_dir }}/github/ansible-lockdown"
 lockdown_cis_repo: "https://github.com/ansible-lockdown/DEBIAN13-CIS"
 lockdown_cis_version: "main"
 lockdown_firewall_package: iptables
