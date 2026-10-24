@@ -9,7 +9,7 @@ runs it locally).
 
 - **namespace**: `odem`
 - **name**: `hardening`
-- **version**: `0.3.1`
+- **version**: `0.4.0`
 - **dependencies**: `odem.base >=0.1.0`, `ansible.posix >=1.0.0`, `community.crypto >=2.0.0`
 
 ## Roles
@@ -22,6 +22,7 @@ runs it locally).
 | `odem.hardening.aide` | apt install, `/var/lib/aide` directory, render one small static template. | 1 |
 | `odem.hardening.lockdown` | Install `cracklib-runtime` + `ansible`, clone `DEBIAN13-CIS` under `{{ identity_default_repo_dir }}`, generate SSH keypair + authorized_key, 6 `lineinfile` overrides into the CIS defaults — each gated by its own `lockdown_enable_*` toggle (sudoers user, sudoers admin group, AIDE async, X window, firewall package, sugroup) — plus a sub-playbook invocation gated by `lockdown_enable_execute`. | 3 (accepted) |
 | `odem.hardening.fail2ban` | Install fail2ban with the default sshd jail (systemd backend, iptables-multiport banaction) to prevent SSH brute-force attacks. Gated by `fail2ban_enable_service`. | 1 |
+| `odem.hardening.wazuh` | Install the Wazuh agent (client) from the Wazuh pre-release 5.x apt repo: official GPG key → `/etc/apt/keyrings/wazuh.gpg` (dearmored) + `signed-by` apt_repository, pinned `wazuh-agent=5.0.0-1`, enroll + set the manager endpoint at install time via `WAZUH_*` deployment variables (endpoint port 1517, enrollment port 1515, optional password/CA), enable and start `wazuh-agent`. Enrollment applies on **fresh install only** (deb postinst). Gated by `wazuh_enable_service`. | 1 |
 
 ## Conventions
 

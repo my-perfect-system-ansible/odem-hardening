@@ -1,0 +1,36 @@
+---
+# Feature toggles — naming pattern: <rolename>_enable_<feature>
+
+wazuh_enable_service: true
+
+wazuh_enable_enrollment: true
+wazuh_enable_registration_password: false
+
+# Regular configuration
+
+wazuh_prereq_packages:
+  - gnupg
+
+wazuh_repo_key_url: https://packages.wazuh.com/key/GPG-KEY-WAZUH
+wazuh_keyring_asc_path: /etc/apt/keyrings/wazuh.asc
+wazuh_keyring_path: /etc/apt/keyrings/wazuh.gpg
+wazuh_repo_url: https://packages-staging.xdrsiem.wazuh.info/pre-release/5.x/apt
+wazuh_repo_suite: unstable
+wazuh_repo_component: main
+wazuh_apt_filename: wazuh
+
+wazuh_package: wazuh-agent
+wazuh_package_version: "5.0.0-1"
+
+wazuh_agent_manager_host: ""
+wazuh_agent_manager_port: 1517
+wazuh_agent_endpoint: "https://{{ wazuh_agent_manager_host }}:{{ wazuh_agent_manager_port }}"
+
+wazuh_agent_enrollment_server: "{{ wazuh_agent_manager_host }}"
+wazuh_agent_enrollment_port: 1515
+wazuh_agent_name: ""
+wazuh_agent_groups: []
+wazuh_agent_registration_password: ""
+wazuh_agent_server_ca_path: ""
+
+wazuh_service_name: wazuh-agent

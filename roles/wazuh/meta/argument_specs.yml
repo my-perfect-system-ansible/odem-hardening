@@ -1,0 +1,127 @@
+---
+argument_specs:
+  main:
+    short_description: Install the Wazuh agent and enroll it with the Wazuh manager
+    description:
+      - Adds the Wazuh pre-release 5.x apt repository (official signing key).
+      - Installs the pinned wazuh-agent package. Enrollment and the manager
+        endpoint are passed as WAZUH_* deployment variables, which the deb
+        postinst consumes on a fresh install.
+      - Enables and starts the wazuh-agent service.
+    options:
+      wazuh_enable_service:
+        type: bool
+        required: false
+        default: true
+        description: "Toggle to install the wazuh-agent and run it entirely"
+      wazuh_enable_enrollment:
+        type: bool
+        required: false
+        default: true
+        description: "Pass the WAZUH_REGISTRATION_* variables so the agent auto-enrolls at install time"
+      wazuh_enable_registration_password:
+        type: bool
+        required: false
+        default: false
+        description: "Pass WAZUH_REGISTRATION_PASSWORD (requires the manager to enforce an enrollment password)"
+      wazuh_prereq_packages:
+        type: list
+        required: false
+        default:
+          - gnupg
+        description: "Apt packages required to add the Wazuh repository"
+      wazuh_repo_key_url:
+        type: str
+        required: false
+        default: https://packages.wazuh.com/key/GPG-KEY-WAZUH
+        description: "URL of the official (ASCII-armored) Wazuh signing key"
+      wazuh_keyring_asc_path:
+        type: str
+        required: false
+        default: /etc/apt/keyrings/wazuh.asc
+        description: "Path for the downloaded armored GPG key"
+      wazuh_keyring_path:
+        type: str
+        required: false
+        default: /etc/apt/keyrings/wazuh.gpg
+        description: "Path for the dearmored GPG keyring referenced by signed-by"
+      wazuh_repo_url:
+        type: str
+        required: false
+        default: https://packages-staging.xdrsiem.wazuh.info/pre-release/5.x/apt
+        description: "Base URL of the Wazuh apt repository (pre-release 5.x beta repo by default)"
+      wazuh_repo_suite:
+        type: str
+        required: false
+        default: unstable
+        description: "Apt suite of the Wazuh repository"
+      wazuh_repo_component:
+        type: str
+        required: false
+        default: main
+        description: "Apt component of the Wazuh repository"
+      wazuh_apt_filename:
+        type: str
+        required: false
+        default: wazuh
+        description: "Filename for the apt source list"
+      wazuh_package:
+        type: str
+        required: false
+        default: wazuh-agent
+        description: "Wazuh agent package name"
+      wazuh_package_version:
+        type: str
+        required: false
+        default: "5.0.0-1"
+        description: "Pinned wazuh-agent version (empty string tracks the repository latest)"
+      wazuh_agent_manager_host:
+        type: str
+        required: false
+        default: ""
+        description: "Hostname or IP of the Wazuh manager (required; used to build the endpoint and enrollment server)"
+      wazuh_agent_manager_port:
+        type: int
+        required: false
+        default: 1517
+        description: "Manager client-comms (HTTPS) port"
+      wazuh_agent_endpoint:
+        type: str
+        required: false
+        default: "https://{{ wazuh_agent_manager_host }}:{{ wazuh_agent_manager_port }}"
+        description: "Full management endpoint passed as WAZUH_MANAGER_ENDPOINT (override to add a URL prefix)"
+      wazuh_agent_enrollment_server:
+        type: str
+        required: false
+        default: "{{ wazuh_agent_manager_host }}"
+        description: "Enrollment server passed as WAZUH_REGISTRATION_SERVER"
+      wazuh_agent_enrollment_port:
+        type: int
+        required: false
+        default: 1515
+        description: "Enrollment port passed as WAZUH_REGISTRATION_PORT"
+      wazuh_agent_name:
+        type: str
+        required: false
+        default: ""
+        description: "Agent name passed as WAZUH_AGENT_NAME (empty string uses the agent hostname)"
+      wazuh_agent_groups:
+        type: list
+        required: false
+        default: []
+        description: "Agent groups passed comma-joined as WAZUH_AGENT_GROUP"
+      wazuh_agent_registration_password:
+        type: str
+        required: false
+        default: ""
+        description: "Enrollment password passed as WAZUH_REGISTRATION_PASSWORD when wazuh_enable_registration_password is true"
+      wazuh_agent_server_ca_path:
+        type: str
+        required: false
+        default: ""
+        description: "Manager CA certificate path passed as WAZUH_REGISTRATION_CA (enables TLS verification of the manager)"
+      wazuh_service_name:
+        type: str
+        required: false
+        default: wazuh-agent
+        description: "systemd service name for the Wazuh agent"

@@ -1,0 +1,105 @@
+---
+- block:
+    - name: Validate wazuh manager host is configured
+      ansible.builtin.assert:
+        that:
+          - wazuh_agent_manager_host | length > 0
+        fail_msg: "wazuh_agent_manager_host must be set to the host running the Wazuh manager."
+
+    - name: Install wazuh prerequisite packages
+      ansible.builtin.package:
+        name: "{{ wazuh_prereq_packages }}"
+        state: present
+        update_cache: true
+      become: true
+
+    - name: Ensure apt keyrings directory exists
+      ansible.builtin.file:
+        path: "{{ wazuh_keyring_asc_path | dirname }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+      become: true
+
+    - name: Download Wazuh GPG key
+      ansible.builtin.get_url:
+        url: "{{ wazuh_repo_key_url }}"
+        dest: "{{ wazuh_keyring_asc_path }}"
+        owner: root
+        group: root
+        mode: "0644"
+      become: true
+
+    - name: Dearmor Wazuh GPG key
+      ansible.builtin.command:
+        cmd: "gpg --dearmor -o {{ wazuh_keyring_path }} {{ wazuh_keyring_asc_path }}"
+        creates: "{{ wazuh_keyring_path }}"
+      become: true
+
+    - name: Add Wazuh pre-release apt repository
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by={{ wazuh_keyring_path }}] {{ wazuh_repo_url }} {{ wazuh_repo_suite }} {{ wazuh_repo_component }}"
+        filename: "{{ wazuh_apt_filename }}"
+        state: present
+      become: true
+
+    - name: Build base wazuh agent deployment variables
+      ansible.builtin.set_fact:
+        wazuh_agent_deployment_vars:
+          WAZUH_MANAGER_ENDPOINT: "{{ wazuh_agent_endpoint }}"
+
+    - name: Add wazuh agent enrollment variables
+      ansible.builtin.set_fact:
+        wazuh_agent_deployment_vars: >-
+          {{
+            wazuh_agent_deployment_vars | combine({
+              'WAZUH_REGISTRATION_SERVER': wazuh_agent_enrollment_server,
+              'WAZUH_REGISTRATION_PORT': wazuh_agent_enrollment_port | string,
+              'WAZUH_AGENT_NAME': wazuh_agent_name,
+              'WAZUH_AGENT_GROUP': wazuh_agent_groups | join(',')
+            })
+          }}
+      when: wazuh_enable_enrollment | bool
+
+    - name: Add wazuh agent registration password
+      ansible.builtin.set_fact:
+        wazuh_agent_deployment_vars: >-
+          {{
+            wazuh_agent_deployment_vars | combine({
+              'WAZUH_REGISTRATION_PASSWORD': wazuh_agent_registration_password
+            })
+          }}
+      when:
+        - wazuh_enable_enrollment | bool
+        - wazuh_enable_registration_password | bool
+
+    - name: Add wazuh agent server CA path
+      ansible.builtin.set_fact:
+        wazuh_agent_deployment_vars: >-
+          {{
+            wazuh_agent_deployment_vars | combine({
+              'WAZUH_REGISTRATION_CA': wazuh_agent_server_ca_path
+            })
+          }}
+      when:
+        - wazuh_enable_enrollment | bool
+        - wazuh_agent_server_ca_path | length > 0
+
+    - name: Install wazuh-agent package
+      ansible.builtin.package:
+        name: "{{ (wazuh_package_version | length > 0) | ternary(wazuh_package ~ '=' ~ wazuh_package_version, wazuh_package) }}"
+        state: present
+        update_cache: true
+      environment: "{{ wazuh_agent_deployment_vars }}"
+      become: true
+
+    - name: Enable and start wazuh-agent service
+      ansible.builtin.systemd:
+        name: "{{ wazuh_service_name }}"
+        enabled: true
+        state: started
+        daemon_reload: true
+      become: true
+
+  when: wazuh_enable_service

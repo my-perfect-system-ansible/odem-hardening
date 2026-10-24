@@ -1,7 +1,7 @@
 ---
 namespace: odem
 name: hardening
-version: 0.3.2
+version: 0.4.0
 readme: README.md
 authors:
   - foo <bar@baz.com>
@@ -17,6 +17,7 @@ tags:
   - apparmor
   - auditd
   - aide
+  - wazuh
   - odem
 repository: https://github.com/my-perfect-system/odem-hardening
 documentation: https://github.com/my-perfect-system/odem-hardening
