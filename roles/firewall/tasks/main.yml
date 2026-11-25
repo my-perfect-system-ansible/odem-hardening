@@ -1,9 +1,17 @@
 ---
-- name: Install firewall packages
+- name: Install firewall packages (Debian)
   ansible.builtin.package:
     name: "{{ firewall_packages }}"
     state: present
     update_cache: true
+  become: true
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Install firewall packages (RedHat via dnf CLI)
+  ansible.builtin.command: dnf install -y iptables iptables-nft
+  when: ansible_facts['os_family'] == 'RedHat'
+  register: dnf_install_firewall
+  changed_when: "'Nothing to do' not in dnf_install_firewall.stdout"
   become: true
 
 - name: Ensure firewall rules directory exists

@@ -5,6 +5,7 @@
     state: present
     update_cache: true
   become: true
+  when: ansible_facts['os_family'] == 'Debian'
 
 - name: Ensure aide conf.d directory exists
   ansible.builtin.file:
@@ -14,6 +15,7 @@
     group: root
     mode: "0755"
   become: true
+  when: ansible_facts['os_family'] == 'Debian'
 
 - name: Render AIDE exclusions configuration
   ansible.builtin.template:
@@ -23,3 +25,4 @@
     group: root
     mode: "0644"
   become: true
+  when: ansible_facts['os_family'] == 'Debian'

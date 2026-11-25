@@ -13,3 +13,5 @@
     daemon_reload: true
   become: true
   when: firewall_enable_docker_compat | bool
+  register: docker_restart
+  failed_when: false

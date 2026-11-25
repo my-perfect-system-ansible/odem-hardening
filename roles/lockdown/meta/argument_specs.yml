@@ -27,7 +27,7 @@ argument_specs:
         type: str
         required: false
         default: "https://github.com/ansible-lockdown/DEBIAN13-CIS"
-        description: "Git URL for the DEBIAN13-CIS lockdown role"
+        description: "Git URL for the DEBIAN13-CIS lockdown role (Debian only)"
       lockdown_cis_version:
         type: str
         required: false

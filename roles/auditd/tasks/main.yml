@@ -1,9 +1,17 @@
 ---
-- name: Install auditd packages
+- name: Install auditd packages (Debian)
   ansible.builtin.package:
     name: "{{ auditd_packages }}"
     state: present
     update_cache: true
+  become: true
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Install auditd packages (RedHat via dnf CLI)
+  ansible.builtin.command: dnf install -y audit
+  when: ansible_facts['os_family'] == 'RedHat'
+  register: dnf_install_auditd
+  changed_when: "'Nothing to do' not in dnf_install_auditd.stdout"
   become: true
 
 - name: Ensure auditd rules directory exists
@@ -28,24 +36,6 @@
   ansible.builtin.template:
     src: etc/audit/auditd.conf.j2
     dest: "{{ auditd_config_path }}"
-    owner: root
-    group: root
-    mode: "0644"
-  become: true
-
-- name: Ensure auditd service override directory exists
-  ansible.builtin.file:
-    path: "{{ auditd_override_dir }}"
-    state: directory
-    owner: root
-    group: root
-    mode: "0755"
-  become: true
-
-- name: Render auditd service override
-  ansible.builtin.copy:
-    src: usr/lib/systemd/system/auditd.service.d/override.conf
-    dest: "{{ auditd_override_path }}"
     owner: root
     group: root
     mode: "0644"

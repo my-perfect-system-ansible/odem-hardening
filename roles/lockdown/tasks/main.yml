@@ -1,9 +1,17 @@
 ---
-- name: Install cracklib-runtime package
+- name: Install cracklib-runtime package (Debian)
   ansible.builtin.package:
     name:
       - cracklib-runtime
     state: present
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Install cracklib (RedHat via dnf CLI)
+  ansible.builtin.command: dnf install -y cracklib
+  when: ansible_facts['os_family'] == 'RedHat'
+  register: dnf_install_cracklib
+  changed_when: "'Nothing to do' not in dnf_install_cracklib.stdout"
+  become: true
 
 - name: Ensure lockdown repos directory exists
   ansible.builtin.file:
@@ -21,6 +29,7 @@
     version: "{{ lockdown_cis_version }}"
     force: true
   become: true
+  when: ansible_facts['os_family'] == 'Debian'
 
 - name: Ensure CIS inventory directory exists
   ansible.builtin.file:
@@ -30,6 +39,7 @@
     group: "{{ lockdown_group }}"
     mode: "2755"
   become: true
+  when: ansible_facts['os_family'] == 'Debian'
 
 - name: Render CIS inventory hosts file
   ansible.builtin.template:
@@ -39,12 +49,14 @@
     group: "{{ lockdown_group }}"
     mode: "2644"
   become: true
+  when: ansible_facts['os_family'] == 'Debian'
 
-- name: Install ansible package
+- name: Install ansible package (Debian)
   ansible.builtin.package:
     name:
       - ansible
     state: present
+  when: ansible_facts['os_family'] == 'Debian'
 
 - name: Ensure lockdown user .ssh directory exists
   ansible.builtin.file:
@@ -83,7 +95,9 @@
     insertafter: '^deb13cis_sudoers_exclude_nopasswd_list:'
     line: '  - deploy'
   become: true
-  when: lockdown_enable_sudoers_user | bool
+  when:
+    - lockdown_enable_sudoers_user | bool
+    - ansible_facts['os_family'] == 'Debian'
 
 - name: Add admin group to CIS sudoers nopasswd list
   ansible.builtin.lineinfile:
@@ -91,7 +105,9 @@
     insertafter: '^deb13cis_sudoers_exclude_nopasswd_list:'
     line: '  - "%admin"'
   become: true
-  when: lockdown_enable_sudoers_admin_group | bool
+  when:
+    - lockdown_enable_sudoers_admin_group | bool
+    - ansible_facts['os_family'] == 'Debian'
 
 - name: Override CIS AIDE init async threshold
   ansible.builtin.lineinfile:
@@ -99,7 +115,9 @@
     regexp: '^deb13cis_aide_init_async:'
     line: 'deb13cis_aide_init_async: 3600'
   become: true
-  when: lockdown_enable_aide_async | bool
+  when:
+    - lockdown_enable_aide_async | bool
+    - ansible_facts['os_family'] == 'Debian'
 
 - name: Enable X window server in CIS defaults
   ansible.builtin.lineinfile:
@@ -107,7 +125,9 @@
     regexp: '^deb13cis_xwindow_server:'
     line: 'deb13cis_xwindow_server: true'
   become: true
-  when: lockdown_enable_xwindow_server | bool
+  when:
+    - lockdown_enable_xwindow_server | bool
+    - ansible_facts['os_family'] == 'Debian'
 
 - name: Override CIS firewall package
   ansible.builtin.lineinfile:
@@ -115,7 +135,9 @@
     regexp: '^deb13cis_firewall_package:'
     line: 'deb13cis_firewall_package: {{ lockdown_firewall_package }}'
   become: true
-  when: lockdown_enable_firewall_package | bool
+  when:
+    - lockdown_enable_firewall_package | bool
+    - ansible_facts['os_family'] == 'Debian'
 
 - name: Override CIS sugroup to sudo
   ansible.builtin.lineinfile:
@@ -123,7 +145,9 @@
     regexp: '^deb13cis_sugroup:'
     line: 'deb13cis_sugroup: sudo'
   become: true
-  when: lockdown_enable_sugroup | bool
+  when:
+    - lockdown_enable_sugroup | bool
+    - ansible_facts['os_family'] == 'Debian'
 
 - name: Execute CIS lockdown playbook when enabled
   ansible.builtin.shell: |
@@ -139,4 +163,6 @@
       -o StrictHostKeyChecking=no
       -o UserKnownHostsFile=/dev/null
   become: true
-  when: lockdown_enable_execute | bool
+  when:
+    - lockdown_enable_execute | bool
+    - ansible_facts['os_family'] == 'Debian'

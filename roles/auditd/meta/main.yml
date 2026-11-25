@@ -8,6 +8,9 @@ galaxy_info:
     - name: Debian
       versions:
         - trixie
+    - name: Fedora
+      versions:
+        - "45"
   galaxy_tags:
     - debian
     - debian13

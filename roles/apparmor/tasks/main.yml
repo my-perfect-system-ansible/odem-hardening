@@ -1,20 +1,22 @@
 ---
-- name: Install apparmor packages
+- name: Install apparmor packages (Debian)
   ansible.builtin.package:
     name: "{{ apparmor_packages }}"
     state: present
     update_cache: true
   become: true
+  when: ansible_facts['os_family'] == 'Debian'
 
-- name: Sync custom apparmor profiles
+- name: Sync custom apparmor profiles (Debian)
   ansible.posix.synchronize:
     src: "{{ role_path }}/files/etc/apparmor.d/"
     dest: /etc/apparmor.d/
     delete: false
     checksum: true
   become: true
+  when: ansible_facts['os_family'] == 'Debian'
 
-- name: Ensure correct ownership for /etc/apparmor.d
+- name: Ensure correct ownership for /etc/apparmor.d (Debian)
   ansible.builtin.file:
     path: /etc/apparmor.d
     state: directory
@@ -23,3 +25,4 @@
     mode: "0755"
     recurse: true
   become: true
+  when: ansible_facts['os_family'] == 'Debian'

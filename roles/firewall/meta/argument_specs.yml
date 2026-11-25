@@ -12,7 +12,7 @@ argument_specs:
         required: false
         default:
           - iptables
-        description: "Apt packages required for iptables"
+        description: "Packages required for iptables (Debian defaults)"
       firewall_policies:
         type: dict
         required: false

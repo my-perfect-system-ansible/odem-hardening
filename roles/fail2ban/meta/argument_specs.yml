@@ -3,7 +3,7 @@ argument_specs:
   main:
     short_description: Install fail2ban and enable the default sshd jail
     description:
-      - Installs the fail2ban package from Debian 13 main.
+      - Installs the fail2ban package.
       - Writes umbrella jail.local with systemd backend and jail.d/ include.
       - Writes jail.d/sshd.local for SSH brute-force protection.
       - Enables and starts the fail2ban service.
@@ -18,7 +18,7 @@ argument_specs:
         required: false
         default:
           - fail2ban
-        description: "Apt packages required for fail2ban"
+        description: "Packages required for fail2ban (Debian defaults)"
       fail2ban_jail_dir:
         type: str
         required: false
