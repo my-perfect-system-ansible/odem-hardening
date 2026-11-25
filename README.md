@@ -9,7 +9,7 @@ profiles, auditd, AIDE intrusion detection, CIS lockdown (clones
 - **namespace**: `odem`
 - **name**: `hardening`
 - **version**: `0.3.1`
-- **dependencies**: `odem.base`, `ansible.posix`, `community.crypto`
+- **dependencies**: `odem.users`, `ansible.posix`, `community.crypto`
 
 See [`galaxy.yml`](galaxy.yml) for the canonical values.
 

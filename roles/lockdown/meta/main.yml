@@ -21,4 +21,4 @@ galaxy_info:
     - lockdown
     - odem-hardening
 dependencies: 
-  - odem.base.identity
+  - odem.users.user
