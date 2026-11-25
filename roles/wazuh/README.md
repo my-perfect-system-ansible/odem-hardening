@@ -42,12 +42,12 @@ and enroll it with a Wazuh manager.
 - The agent is installed from the Wazuh **pre-release 5.x** apt repository
   (suite `unstable`), signed by the official Wazuh key. `wazuh_package_version`
   is pinned to `5.0.0-1` (the 5.0.0-beta5 build) to match the manager images
-  shipped by `mps-monitoring`.
+  shipped by `mps-services-monitoring`.
 - Enrollment and the manager endpoint are consumed by the deb **postinst** on a
   **fresh install only**. Changing the manager after the agent is installed
   requires re-enrolling manually (or reinstalling the package); re-running this
   role against an already-installed agent will not re-apply the variables.
-- On the manager host, `mps-monitoring`'s `BIND_IP` must not stay `127.0.0.1`
+- On the manager host, `mps-services-monitoring`'s `BIND_IP` must not stay `127.0.0.1`
   for remote agents, and the enrollment (`1515`) and client-comms (`1517`) ports
   must be reachable.
 - The beta5 manager generates its own (self-signed) remoted certificate. If TLS
