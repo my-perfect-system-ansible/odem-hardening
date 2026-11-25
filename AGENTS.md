@@ -10,7 +10,7 @@ runs it locally).
 - **namespace**: `odem`
 - **name**: `hardening`
 - **version**: `0.4.0`
-- **dependencies**: `odem.users >=0.1.0`, `ansible.posix >=1.0.0`, `community.crypto >=2.0.0`
+- **dependencies**: `odem.os >=0.1.0`, `ansible.posix >=1.0.0`, `community.crypto >=2.0.0`
 
 ## Roles
 
