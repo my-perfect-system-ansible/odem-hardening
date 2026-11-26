@@ -20,5 +20,4 @@ galaxy_info:
     - cis
     - lockdown
     - odem-hardening
-dependencies: 
-  - odem.os.user
+dependencies: []
