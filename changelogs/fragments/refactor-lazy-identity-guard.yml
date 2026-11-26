@@ -1,0 +1,14 @@
+---
+# Fragment for the lazy identity guard refactor (2026-11-26).
+# Compiles into changelogs/changelog.yaml at release time.
+removed_features:
+  - |
+    `lockdown` no longer meta-depends on `odem.os.user`: it resolves the
+    identity facts lazily via a first-task `include_role {name: odem.os.user,
+    tasks_from: identity.yml, public: true}` guard instead. Account management
+    only runs where `odem.os.user` is applied explicitly (e.g. the bootstrap
+    playbook); standalone lockdown application no longer touches user accounts.
+  - |
+    `lockdown` mirrors the canonical `user_default_repo_dir` value in its
+    `defaults/main.yml` so argument-spec validation can render the templated
+    defaults before any task (inventory overrides still win).
